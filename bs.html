@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Title</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="ba.css">
+    <!--[if lt IE 9]>
+    <script src="lib/html5shiv/html5shiv.min.js"></script>
+    <script src="lib/respond/respond.min.js"></script>
+    <![endif]-->
+
+
+    <script src="jquery-1.11.1.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="nav">
+    <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-2 logo">
+        <img src="img/logo.png" alt="">
+    </div>
+    <div class="col-md-6 link">
+        <a class="all" href="#">全部</a>
+        <a class='content_video' href="#">视频</a>
+        <a class='content_img' href="#">图片</a>
+        <a class='content_text' href="#">段子</a>
+        <a class='content_audio' href="#">声音</a>
+        <a href="#">排行</a>
+        <a href="#">美女</a>
+    </div>
+      <div class="col-md-2 sing">
+          <bottom id="singin">登录</bottom>|
+          <bottom id="singup">注册</bottom>
+      </div>
+
+        <div class="sing_in"></div>
+        <div class="sing_up"></div>
+      <div class="col-md-1"></div>
+</div>
+</div>
+
+<!--<span onclick="read(datass)">1</span>-->
+<div class="box">
+<div class="box_left">
+    <ul id="demo">
+
+    </ul>
+</div>
+    <div class="box_right"></div>
+
+    <div class="box_page">
+        <ul>
+            <li class="one">1</li>
+            <li class="two">2</li>
+            <li class="three">3</li>
+            <li class="four">4</li>
+            <li class="five">5</li>
+        </ul>
+    </div>
+</div>
+<script>
+ $(function () {
+     var DateTime= function () {
+         var date = new Date();
+         var month = date.getMonth() + 1;
+         var datetime = date.getFullYear()
+                 + ""// "年"
+                 + (month >= 10 ? month : "0" + month)
+                 + ""// "月"
+                 + (date.getDate() < 10 ? "0" + date.getDate() : date
+                         .getDate())
+                 + ""
+                 + (date.getHours() < 10 ? "0" + date.getHours() : date
+                         .getHours())
+                 + ""
+                 + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date
+                         .getMinutes())
+                 + ""
+                 + (date.getSeconds() < 10 ? "0" + date.getSeconds() : date
+                         .getSeconds());
+         return datetime;
+     };
+      var img=document.querySelector(".content_img");
+     console.log(img);
+      var video=document.querySelector(".content_video");
+      var audio=document.querySelector(".content_audio");
+      var text=document.querySelector(".content_text");
+     var currentType="";
+     Ajax("",1);
+     $(".all").on("click",function () {
+         Ajax("",1);
+         currentType="";
+     });
+     img.onclick=function () {
+         ul.innerHTML='';
+         Ajax(10,1);
+         currentType=10;
+     };
+    video.addEventListener("click",function () {
+        ul.innerHTML='';
+        Ajax(41,1);
+        currentType=41;
+
+    });
+     audio.onclick=function () {
+         ul.innerHTML='';
+         Ajax(31,1);
+         currentType=31;
+     };
+     text.onclick=function () {
+         ul.innerHTML='';
+         Ajax(29,1);
+         currentType=29;
+     };
+
+     $(".one").click(function () {
+         ul.innerHTML='';
+
+         Ajax(currentType,1);
+     });
+     $(".two").click(function () {
+         ul.innerHTML='';
+
+         Ajax(currentType,2);
+     });
+     $(".three").click(function () {
+         ul.innerHTML='';
+
+         Ajax(currentType,3);
+     }) ;
+     $(".four").click(function () {
+         ul.innerHTML='';
+         Ajax(currentType,4);
+     }) ;
+     $(".five").click(function () {
+         ul.innerHTML='';
+         Ajax(currentType,5);
+     });
+     function Ajax(typeD,p) {
+         $.ajax({
+             type: "get",
+             url: "https://route.showapi.com/255-1?page="+p+"&showapi_appid=31711&showapi_timestamp=" + DateTime() + "&title=&type="+typeD+ "&showapi_sign=2e773c1bef6145edbf1efc4ece6dab73",
+             //2017 02 08 08 22 14
+             success: function (data) {
+                 var datas = data.showapi_res_body.pagebean.contentlist;
+                 console.log(datas);
+                all(datas);
+             }
+         })
+
+     };
+
+ })
+ var ul = document.querySelector("#demo");
+function all(datas) {
+
+    function Bs(option) {
+        this.name = option.name;
+        this.profile_image = option.profile_image;
+        this.create_time = option.create_time;
+
+        this.type = option.type;
+        this.text = option.text;
+        this.image0 = option.image0;
+        this.video_uri=option.video_uri;
+        this.voice_uri=option.voice_uri;
+
+        this.weixin_url = option.weixin_url;
+    }
+    Bs.prototype = {
+        content: function () {
+            var lable='';
+            lable += "<li><img class='head_img' src=" + this.profile_image + ">";
+            lable += "<span>" + this.name + "</span>";
+            lable += "<span class='time'>" + this.create_time + "</span>";
+            lable += "<div>" + this.text + "</div>";
+
+             if(this.type==10){
+                 lable += "<img class='li_img'  src='" + this.image0 + "'>";
+             }else if(this.type==41){
+                 lable+="<video class='li_video' src='"+this.video_uri+"' controls></video>";
+             }else  if(this.type==31){
+                 lable+="<audio class='li_audio' src='"+this.voice_uri+"' controls></audio>";
+             }else if(this.type==29){
+                 lable+="<p class='li_text'>"+this.text+"</p>";
+             };
+            lable += "<a href='" + this.weixin_url + "'></a></li>";
+
+            var ul = document.querySelector("#demo");
+            ul.innerHTML += lable;
+        }
+    }
+
+    for (var i = 0; i < datas.length; i++) {
+        var bs = new Bs(datas[i]);
+        bs.content();
+    }
+}
+
+</script>
+<script src="bs.js"></script>
+</body>
+</html>
